@@ -13,12 +13,77 @@ public class Coche {
 	
 	// Constructores
 	
+	//Variables paso 4
+		static final double MASA = 1;
+		static final double FUERZA_BASE_ADELANTE = 2000;
+		static final double FUERZA_BASE_ATRAS=1000;
+		static final double COEF_RZTO_SUELO = 15.5;
+		static final double COEF_RZTO_AIRE= 0.35;
+	
+	
 	public Coche() {
 		miVelocidad = 0;
 		miDireccionActual = 0;
 		posX = 300;
 		posY = 300;
 	}
+	
+	
+	public static double getMasa() {
+		return MASA;
+	}
+
+
+	public static double getFuerzaBaseAdelante() {
+		return FUERZA_BASE_ADELANTE;
+	}
+
+
+	public static double getFuerzaBaseAtras() {
+		return FUERZA_BASE_ATRAS;
+	}
+
+
+	public static double getCoefRztoSuelo() {
+		return COEF_RZTO_SUELO;
+	}
+
+
+	public static double getCoefRztoAire() {
+		return COEF_RZTO_AIRE;
+	}
+
+
+	/** Devuelve la fuerza de aceleración del coche, de acuerdo al motor definido en la práctica 2
+	 * @return Fuerza de aceleración en Newtixels
+	 */
+	 public double fuerzaAceleracionAdelante() {
+	 if (miVelocidad<=-150) return FUERZA_BASE_ADELANTE;
+	 else if (miVelocidad<=0)
+	 return FUERZA_BASE_ADELANTE*(-miVelocidad/150*0.5+0.5);
+	 else if (miVelocidad<=250)
+	 return FUERZA_BASE_ADELANTE*(miVelocidad/250*0.5+0.5);
+	 else if (miVelocidad<=750)
+	 return FUERZA_BASE_ADELANTE;
+	 else return FUERZA_BASE_ADELANTE*(-(miVelocidad-1000)/250);
+	 } 
+	 
+	 //FUERZA ACELERACION ATRAS, QUE HAY QUE CAMBIAR?????
+	 /** Devuelve la fuerza de aceleración del coche, de acuerdo al motor definido en la práctica 2
+		 * @return Fuerza de aceleración en Newtixels
+		 */
+		 public double fuerzaAceleracionAtras() {
+		 if (miVelocidad<=-150) return FUERZA_BASE_ATRAS;
+		 else if (miVelocidad<=0)
+		 return FUERZA_BASE_ATRAS*(-miVelocidad/150*0.5+0.5);
+		 else if (miVelocidad<=250)
+		 return FUERZA_BASE_ATRAS*(miVelocidad/250*0.5+0.5);
+		 else if (miVelocidad<=750)
+		 return FUERZA_BASE_ATRAS;
+		 else return FUERZA_BASE_ATRAS*(-(miVelocidad-1000)/250);
+		 } 
+	
+	
 	
 	/** Devuelve la velocidad actual del coche en píxeles por segundo
 	 * @return	velocidad
@@ -103,4 +168,6 @@ public class Coche {
 		return piloto + " (" + posX + "," + posY + ") - " +
 			   "Velocidad: " + miVelocidad + " ## Dirección: " + miDireccionActual; 
 	}
+	
+		
 }

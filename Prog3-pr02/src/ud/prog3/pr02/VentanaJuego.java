@@ -3,6 +3,7 @@ package ud.prog3.pr02;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.*;
+import java.util.Random;
 
 import javax.swing.*;
 
@@ -17,6 +18,8 @@ public class VentanaJuego extends JFrame {
 	MundoJuego miMundo;        // Mundo del juego
 	CocheJuego miCoche;        // Coche del juego
 	MiRunnable miHilo = null;  // Hilo del bucle principal de juego	
+	
+	boolean [] botones = new boolean [4];
 
 	/** Constructor de la ventana de juego. Crea y devuelve la ventana inicializada
 	 * sin coches dentro
@@ -80,24 +83,63 @@ public class VentanaJuego extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 					case KeyEvent.VK_UP: {
-						miCoche.acelera( +5, 1 );
+						//miCoche.acelera( +5, 1 );
+						botones [0] = true;
 						break;
 					}
 					case KeyEvent.VK_DOWN: {
-						miCoche.acelera( -5, 1 );
+						//miCoche.acelera( -5, 1 );
+						botones [1] = true;
 						break;
 					}
 					case KeyEvent.VK_LEFT: {
-						miCoche.gira( +10 );
+						//miCoche.gira( +10 );
+						botones [2] = true;
 						break;
 					}
 					case KeyEvent.VK_RIGHT: {
-						miCoche.gira( -10 );
+						//miCoche.gira( -10 );
+						botones [3] = true;
 						break;
 					}
 				}
 			}
 		});
+		
+		// Añadido para que también se gestione por teclado con el KeyListener
+				pPrincipal.addKeyListener( new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						switch (e.getKeyCode()) {
+							case KeyEvent.VK_UP: {
+								//miCoche.acelera( +5, 1 );
+								double fuerzaAceleracionAdelante = miCoche.fuerzaAceleracionAdelante();
+								MundoJuego.aplicarFuerza (fuerzaAceleracionAdelante ,miCoche);
+								botones [0] = false;
+								break;
+							}
+							case KeyEvent.VK_DOWN: {
+								//miCoche.acelera( -5, 1 );
+								double fuerzaAceleracionAtras = miCoche.fuerzaAceleracionAdelante();
+								MundoJuego.aplicarFuerza (fuerzaAceleracionAtras ,miCoche);
+								botones [1] = false;
+								break;
+							}
+							case KeyEvent.VK_LEFT: {
+								//miCoche.gira( +10 );
+								botones [2] = false;
+								break;
+							}
+							case KeyEvent.VK_RIGHT: {
+								//miCoche.gira( -10 );
+								botones [3] = false;
+								break;
+							}
+						}
+					}
+				});
+				
+				
 		pPrincipal.setFocusable(true);
 		pPrincipal.requestFocus();
 		pPrincipal.addFocusListener( new FocusAdapter() {
@@ -147,10 +189,13 @@ public class VentanaJuego extends JFrame {
 	 */
 	class MiRunnable implements Runnable {
 		boolean sigo = true;
+		double segundos;
 		@Override
 		public void run() {
 			// Bucle principal forever hasta que se pare el juego...
+			
 			while (sigo) {
+				
 				// Mover coche
 				miCoche.mueve( 0.040 );
 				// Chequear choques
@@ -159,6 +204,64 @@ public class VentanaJuego extends JFrame {
 					miMundo.rebotaHorizontal(miCoche);
 				if (miMundo.hayChoqueVertical(miCoche)) // Espejo vertical si choca en Y
 					miMundo.rebotaVertical(miCoche);
+				
+				double fuerzaRoz= miMundo.calcFuerzaRozamiento(miCoche.getMasa(), miCoche.getCoefRztoSuelo(), miCoche.getCoefRztoAire(), miCoche.getVelocidad());
+//				
+				if (botones[0]==true){
+					
+					
+					miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAdelante(), miCoche.getMasa());
+					miMundo.aplicarFuerza(miCoche.fuerzaAceleracionAdelante(), miCoche);
+					
+					
+					
+					//miCoche.acelera( +5, 1 );
+				}
+				
+				if (botones[0]==false){
+					
+					
+					//miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAdelante(), miCoche.getMASA());
+					miMundo.aplicarFuerza(fuerzaRoz, miCoche);
+					
+				}
+
+				
+				
+				if (botones[1]==true){
+					
+					miMundo.calcAceleracionConFuerza(-miCoche.fuerzaAceleracionAtras(), miCoche.getMasa());
+					miMundo.aplicarFuerza(-miCoche.fuerzaAceleracionAtras(), miCoche);
+					
+					//miCoche.acelera( -5, 1 );
+				}
+				
+				if (botones[1]==false){
+					
+					//miMundo.calcAceleracionConFuerza(-miCoche.fuerzaAceleracionAtras(), miCoche.getMASA());
+					miMundo.aplicarFuerza(fuerzaRoz, miCoche);
+					
+				}
+				if (botones[2]==true){
+					miCoche.gira( +10 );
+				}
+				if (botones[3]==true){
+					miCoche.gira( -10 );
+				}
+
+				
+				if(segundos>=1.2){
+				
+					//Creamos la estrella
+					Random r = new Random();
+
+					
+				}else{
+					segundos=segundos+0.040;
+				}
+				
+				
+								
 				// Dormir el hilo 40 milisegundos
 				try {
 					Thread.sleep( 40 );
