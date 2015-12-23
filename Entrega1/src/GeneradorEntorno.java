@@ -12,8 +12,13 @@ import javax.swing.*;
 
 public class GeneradorEntorno extends JFrame{
     
-    private Laberinto LaberintoVirtual = new Laberinto();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Laberinto LaberintoVirtual = new Laberinto();
     private JLabel[][] LaberintoGrafico = new JLabel[40][40];
+    private Pacman pacman = new Pacman (0,0,0);
     
     
     public GeneradorEntorno()
@@ -21,6 +26,9 @@ public class GeneradorEntorno extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600,600);
         setVisible(true);
+        
+      //Carga el Usuario
+        CargarUsuario();
         
         //Genera el laberinto grafico a partir del Laberinto virtual
         
@@ -46,5 +54,21 @@ public class GeneradorEntorno extends JFrame{
                 LaberintoGrafico[i][j].validate();
             }
         }
+    }
+    
+    private void CargarUsuario()
+    {
+        //Añade el Usuario al laberinto
+    	pacman.setInicialX(60);
+    	pacman.setInicialY(80);
+        pacman.comienzo();
+        
+        //Pacman.EstablecerLaberinto(LaberintoVirtual.DevolverLaberinto(), LaberintoVirtual.DevolverLargoImagenes(), LaberintoVirtual.DevolverAlturaImagenes());
+        
+        //Carga las posiciones del usuario
+        //pacman.setIcon(pacman.ObtenerImagen());				//pacman.setIcon(new ImageIcon("la url"));
+        //pacman.setBounds(pacman.posicionX,pacman.posicionY,20,20);
+        //add(pacman);
+        //pacman.validate();
     }
 }

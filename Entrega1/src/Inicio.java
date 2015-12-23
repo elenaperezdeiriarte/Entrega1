@@ -38,7 +38,7 @@ public class Inicio extends JFrame implements ActionListener {
 		btnCrearUsuario = new JButton("Crear usuario");
 		btnCrearUsuario.addActionListener(this);
 		btnCrearUsuario.setBounds(242, 70, 148, 52);
-		btnIniciarJuego.setActionCommand(NUEVO_USUARIO);
+		btnCrearUsuario.setActionCommand(NUEVO_USUARIO);
 		contentPane.add(btnCrearUsuario);
 	}
 

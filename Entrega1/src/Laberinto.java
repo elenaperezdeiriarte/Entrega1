@@ -1,12 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author diego
- */
 public class Laberinto {
 
 	private final int LARGO_IMAGENES = 10;
