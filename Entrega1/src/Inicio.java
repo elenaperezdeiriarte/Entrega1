@@ -13,9 +13,11 @@ public class Inicio extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JButton btnIniciarJuego;
 	private JButton btnCrearUsuario;
+	private JButton btnVerRanking;
 	
 	public final static String INICIAR_JUEGO = "INICIAR_JUEGO";
 	public final static String NUEVO_USUARIO = "NUEVO_USUARIO";
+	public final static String VER_RANKING = "VER_RANKING";
 	
 	
 
@@ -40,6 +42,15 @@ public class Inicio extends JFrame implements ActionListener {
 		btnCrearUsuario.setBounds(242, 70, 148, 52);
 		btnCrearUsuario.setActionCommand(NUEVO_USUARIO);
 		contentPane.add(btnCrearUsuario);
+		
+		
+		btnVerRanking = new JButton("Crear usuario");
+		btnVerRanking.addActionListener(this);
+		btnVerRanking.setBounds(242, 70, 148, 52);
+		btnVerRanking.setActionCommand(VER_RANKING);
+		contentPane.add(btnVerRanking);
+		
+		
 	}
 
 
@@ -54,6 +65,7 @@ public class Inicio extends JFrame implements ActionListener {
 		iniciar.setVisible (true); break;
 		case NUEVO_USUARIO:NuevoUsuario nuevo = new NuevoUsuario (); 
 		nuevo.setVisible (true); break;
+		case VER_RANKING: BD.mostrarTabla (USUARIOS);		//COMO PONER EL NOMBRE DE LA TABLA
 		}
 	}
 }

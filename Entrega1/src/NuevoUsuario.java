@@ -51,8 +51,16 @@ public class NuevoUsuario extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		switch (e.getActionCommand())
 		{
-		case EMPEZAR_JUEGO: GeneradorEntorno entorno = new GeneradorEntorno ();
-		entorno.setVisible(true);
+		case EMPEZAR_JUEGO: 
+			BD.initBD("PacmanBD");
+			BD.crearTablaBD();
+			BD.anadirUsuario(st, textField.getText(), 0);  //NO SE QUE PONER EN ST
+			
+			GeneradorEntorno entorno = new GeneradorEntorno ();
+			entorno.setVisible(true);
+			break;
+		
+		
 		}
 		
 	}
