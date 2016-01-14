@@ -1,18 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-/**
- *
- * @author diego
- */
+
 public class Main {
     
     public static void main(String Args[])
     {
+    	BD.conexion();
+    	BD.actualizar("fff", 7);
     	Inicio inicio = new Inicio();
 		inicio.setVisible(true);
-    	//new GeneradorEntorno();
+		BD.close();
     }
 }

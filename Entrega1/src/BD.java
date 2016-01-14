@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,6 +19,8 @@ public class BD {
 	
 	private static Connection connection = null;
 	private static Statement statement = null;
+	
+	public static String nombreJugador = "";
 
 	/** Inicializa una BD SQLITE y devuelve una conexión con ella. Debe llamarse a este 
 	 * método antes que ningún otro, y debe devolver no null para poder seguir trabajando con la BD.
@@ -35,6 +38,21 @@ public class BD {
 			JOptionPane.showMessageDialog( null, "Error de conexión!! No se ha podido conectar con " + nombreBD , "ERROR", JOptionPane.ERROR_MESSAGE );
 			System.out.println( "Error de conexión!! No se ha podido conectar con " + nombreBD );
 			return null;
+		}
+	}
+	
+	public static void conexion() {
+		try {
+			connection = DriverManager.getConnection("jdbc:sqlite:pacman.db");
+			statement = connection.createStatement();
+			try {
+				statement.executeUpdate("create table USUARIOS (Nombre varchar(255), PuntuacionMaxima integer)");
+			} catch (SQLException e) {
+				if (!e.getMessage().equals("table USUARIOS already exists"))  // Este error sí es correcto si la tabla ya existe
+					e.printStackTrace();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -74,45 +92,70 @@ public class BD {
 	public static void crearTablaBD() {
 		if (statement==null) return;
 		try {
-			statement.executeUpdate("create table PacmanPuntuaciones" +
-				"(Nombre string, PuntuaciónMáxima int" );
+			statement.executeUpdate("create table USUARIOS (Nombre string, PuntuaciónMáxima int)" );
 		} catch (SQLException e) {
 			// Si hay excepción es que la tabla ya existía (lo cual es correcto)
 			// e.printStackTrace();  
 		}
 	}
 		
-	public static boolean anadirUsuario(Statement st, String nombre, int puntuacion) throws SQLException 
+	public static boolean anadirUsuario(String nombre, int puntuacion) throws SQLException 
 		{
 		try {
-			String sentSQL = "insert into USUARIOS values(" +"'" + nombre + "', " +"'" + puntuacion + "')";
-			JOptionPane.showMessageDialog(null, "Usuario añadido");
+			String sentSQL = "insert into USUARIOS values(" +"'" + nombre + "', " + puntuacion + ")";
+
 			System.out.println( sentSQL );  // (Quitar) para ver lo que se hace
-			int val = st.executeUpdate( sentSQL );
+			int val = statement.executeUpdate( sentSQL );
 			if (val!=1) return false;  // Se tiene que añadir 1 - error si no
-			return true;
+			else {
+				JOptionPane.showMessageDialog(null, "Usuario añadido");
+				return true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
 		
- public void mostrarTabla (String table_name) {
-        try {
-            String Query = "SELECT * FROM " + table_name;
-            Statement st = connection.createStatement();
-            java.sql.ResultSet resultSet;
-            resultSet = st.executeQuery(Query);
- 
-            while (resultSet.next()) {
-                System.out.println("Nombre: " + resultSet.getString("Nombre") + " " +  "Puntuacion: " + resultSet.getInt("Puntuacion"));
-            }
- 
+ public static ResultSet mostrarTabla (String table_name) {
+	 
+	 ResultSet resultSet = null;
+	 try {
+            String Query = "SELECT * FROM " + table_name;           
+            resultSet = statement.executeQuery(Query);
+            
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error en la adquisición de datos");
         }
+        return resultSet;
     }
 	
+	public static int puntuacionJugador (String nombre)
+	{
+		ResultSet resultSet = null;
+		int puntuacion = 0;
+		try {
+            String Query = "SELECT * FROM USUARIOS WHERE Nombre = '" + nombre + "'";           
+            resultSet = statement.executeQuery(Query);
+            resultSet.next();
+            puntuacion = resultSet.getInt("PuntuacionMaxima");
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error en la adquisición de datos");
+        }
+		return puntuacion;
+	}
 	
+	public static void actualizar (String nombre, int puntuacion)
+	{
+		
+		try {
+            String Query = "UPDATE USUARIOS SET PuntuacionMaxima=" + puntuacion + " WHERE Nombre='" + nombre + "'";     
+            statement.executeUpdate(Query);
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error en actualizar");
+        }
+	}
 
 }

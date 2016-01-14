@@ -1,16 +1,22 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-
+import java.net.URL;
+import java.sql.SQLException;
+import java.awt.Color;
+import java.awt.Font;
 
 public class NuevoUsuario extends JFrame implements ActionListener {
 
@@ -19,28 +25,49 @@ public class NuevoUsuario extends JFrame implements ActionListener {
 	private JButton btnEmpezarAJugar;
 	
 	public final static String EMPEZAR_JUEGO = "EMPEZAR_JUEGO";
+	
+	public Image imagenFondo;
+	public URL fondo;
 
 	
 	public NuevoUsuario() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 594, 384);
+		contentPane = new JPanel()
+		{
+			public void paintComponent (Graphics g)
+			{
+				g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
+				
+			}
+			};
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		this.setLocationRelativeTo(null);
+		
+		fondo= this.getClass().getResource("/pacman-1133.jpg");
+		imagenFondo = new ImageIcon (fondo).getImage();
 		
 		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(56, 71, 46, 14);
+		lblNombre.setForeground(Color.WHITE);
+		lblNombre.setBackground(Color.BLACK);
+		lblNombre.setFont(new Font("Consolas", Font.PLAIN, 28));
+		lblNombre.setBounds(93, 50, 195, 51);
 		contentPane.add(lblNombre);
 		
 		textField = new JTextField();
-		textField.setBounds(223, 68, 86, 20);
+		textField.setFont(new Font("Consolas", Font.PLAIN, 28));
+		textField.setBounds(240, 53, 291, 51);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		btnEmpezarAJugar = new JButton("Empezar a jugar");
+		btnEmpezarAJugar.setFont(new Font("Consolas", Font.PLAIN, 28));
+		btnEmpezarAJugar.setForeground(Color.WHITE);
+		btnEmpezarAJugar.setBackground(Color.BLACK);
 		btnEmpezarAJugar.addActionListener(this);
-		btnEmpezarAJugar.setBounds(134, 121, 203, 58);
+		btnEmpezarAJugar.setBounds(170, 264, 266, 58);
 		btnEmpezarAJugar.setActionCommand(EMPEZAR_JUEGO);
 		contentPane.add(btnEmpezarAJugar);
 	}
@@ -49,18 +76,25 @@ public class NuevoUsuario extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+		BD.nombreJugador = textField.getText();
+		
 		switch (e.getActionCommand())
 		{
 		case EMPEZAR_JUEGO: 
-			BD.initBD("PacmanBD");
-			BD.crearTablaBD();
-			BD.anadirUsuario(st, textField.getText(), 0);  //NO SE QUE PONER EN ST
+			BD.conexion();
+			try {
+				BD.anadirUsuario(textField.getText(), 0);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}  
 			
-			GeneradorEntorno entorno = new GeneradorEntorno ();
-			entorno.setVisible(true);
-			break;
+			Comienzo c = new Comienzo ();
+			c.inicioComecocos();
 		
-		
+			BD.close();
+
 		}
 		
 	}
